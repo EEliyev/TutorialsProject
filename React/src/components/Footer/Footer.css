@@ -1,0 +1,33 @@
+.footer {
+  margin-top: 5%;
+  background-color: #3e454d;
+}
+.footer ul {
+  display: flex;
+  margin: 5px 5px;
+  padding: 25px;
+}
+.footer li a {
+  color: white;
+}
+.font-li {
+  color: white;
+  font-size: 3rem;
+}
+.font-li {
+  padding: 10px;
+  border-radius: 3px;
+}
+.font-li:hover {
+  background-color: #c8d94d;
+  transition: 0.25s;
+  color: #3e454d;
+}
+.inside-footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 200px;
+  width: 70%;
+  margin: 0px auto;
+}

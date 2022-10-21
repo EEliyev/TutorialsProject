@@ -1,0 +1,40 @@
+.sign-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}
+.sign-inner {
+  margin-top: 3rem;
+  padding-block: 1rem;
+  width: 450px;
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 1px 4px 1px rgb(0 0 0/ 0.2); */
+}
+
+.sign-inputs {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding-block: 2rem;
+  margin: 0 2.8rem;
+}
+.sign-inputs-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 2rem;
+  margin: 0 2.8rem;
+}
+.sign-inputs a {
+  color: #c8d94d;
+}
+.sign-inputs-footer a {
+  color: #c8d94d;
+}
+.sign-inputs input {
+  margin-block: 1rem;
+}

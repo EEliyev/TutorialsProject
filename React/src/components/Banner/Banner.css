@@ -1,0 +1,43 @@
+.banner{
+    width: 80%;
+    margin: 3rem auto;
+    height: 350px;
+    overflow: hidden;
+}
+.banner-img{
+    width: 800px;
+    height: 350px;
+    object-fit: cover;
+}
+.slick-dots {
+    bottom: 20px;
+}
+
+.slick-dots li button{
+    background: white;
+    opacity: 0.3;
+    width: 20px;
+    height: 10px;
+}
+.slick-dots li button::before{
+    content: "";
+}
+.slick-active{
+    background-color: rgba(255, 255, 255, 0.87);
+    width: 20px;
+    height: 10px !important;
+}
+.slick-arrow{
+    display: none !important;
+    background-color: black;
+}
+@keyframes animate {
+    from{
+        opacity: 0 ;
+        height: 0 ;
+    }
+    to{
+        opacity: 1 ;
+        height: 350px;
+    }
+}
