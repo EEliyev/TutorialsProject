@@ -6,11 +6,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPopAddTuto } from "../../../Redux/popupReducer";
 import { addData } from "../../../Redux/dataReduce";
 import { setRender } from "../../../Redux/renderReducer";
+import Fetch from "../../Fetch";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Add() {
 
   const active= useSelector(state=>state.pop.popAddTuto);
   const dispatch=useDispatch();
+
+  const navigate= useNavigate();
+  const location=useLocation()
 
   const refName= useRef(null);
   const refTitle= useRef(null);
@@ -26,26 +31,15 @@ function Add() {
       text:refText.current?.value!=""?refText.current?.value:null,
       url:refUrl.current.value!=""?refUrl.current?.value:null
     }
-
-      fetch("https://localhost:7156/tutorial/CreateTutorial", {
-        method: "Post",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "http://localhost:3000",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body:JSON.stringify(model)
-      })
-        .then((res) =>res.json())
-        .then((json) => {
-          console.log(json);
-          dispatch(setPopAddTuto(false))
-          dispatch(setRender(Math.random()))
-        })
-        .catch((err) => console.log(err));
-
-
+    Fetch("https://localhost:7156/tutorial/CreateTutorial","Post",model)
+          .then(json=>{
+            if(json?.status==401){
+              navigate("/sign-in",{state:{from:location,replace:true}})
+            }
+            dispatch(setPopAddTuto(false))
+            dispatch(setRender(Math.random()))
+          })
+  
   }
 
 
@@ -106,4 +100,4 @@ function Add() {
   );
 }
 
-export default Add;
+export default React.memo(Add);

@@ -1,3 +1,4 @@
+import Editor from '@monaco-editor/react';
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../Sidebar/Sidebar'
 import './Tutorials.css'
@@ -9,7 +10,7 @@ function Tutorials({data}) {
   return (
     <div className="middle">
        
-        <Sidebar category={data.subjects} setIndexCategory={setIndexCategory}/>
+        <Sidebar category={data?.subjects} setIndexCategory={setIndexCategory}/>
         <div className="content ">
             <div className="content-main">
                 <div className="content-title">
@@ -25,4 +26,4 @@ function Tutorials({data}) {
   )
 }
 
-export default Tutorials
+export default React.memo(Tutorials)

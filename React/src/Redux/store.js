@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./authReducer";
 import dataReduce from "./dataReduce";
 import popupReducer from "./popupReducer";
 import renderReducer from "./renderReducer";
@@ -9,6 +10,7 @@ export  const store = configureStore({
         data:dataReduce,
         slideEffect:slideEffectReducer,
         pop:popupReducer,
-        render:renderReducer
+        render:renderReducer,
+        auth:authReducer
     }
 });

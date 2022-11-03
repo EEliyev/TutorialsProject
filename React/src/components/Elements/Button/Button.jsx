@@ -29,4 +29,4 @@ function Button({ text, width, type, outsideDiv = false , flexEnd=false, margin,
   }
 }
 
-export default Button;
+export default React.memo(Button);

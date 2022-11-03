@@ -4,15 +4,17 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import uuid from "react-uuid";
 import Button from "../../Elements/Button/Button";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Add from "../AddPop/Add";
-import { setPopAdd, setPopAddSection, setPopAddTuto, setPopEditTuto } from "../../../Redux/popupReducer";
+import { setPopAdd, setPopAddSection, setPopAddTuto, setPopEditSection, setPopEditTuto } from "../../../Redux/popupReducer";
 import Edit from "../AddPop/Edit";
 import { setData, setSubject } from "../../../Redux/dataReduce";
 import { setRender } from "../../../Redux/renderReducer";
 import AddSection from "../AddSectionPop/AddSection";
+import EditSection from "../AddSectionPop/EditSection";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Fetch from "../../Fetch";
+
 
 function TutorialsView() {
   const cards = useSelector((state) => state.data.data);
@@ -22,23 +24,18 @@ function TutorialsView() {
   const popEditActive= useSelector(state=>state.pop.popEditTuto);
   const dispatch= useDispatch();
 
-  const[selectedTuto,setSelectedTuto]= useState(null);
+  const[selectedTuto,setSelectedTuto]= useState([]);
+  const[selectedSub,setSelectedSub]=useState([]);
   const [selectedTutoName,setSelectedTutoName]= useState(null);
   const[tutorial,setTutorial]=useState([]);
 
+  const navigate=useNavigate();
+  const location=useLocation();
+
   useEffect(() => {
-    fetch("https://localhost:7156/tutorial/GetTutorials", {
-      method: "Get",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        dispatch(setData(json)) 
+    Fetch("https://localhost:7156/tutorial/GetTutorials","Get")
+          .then(json=>{
+            dispatch(setData(json)) 
         if(selectedTutoName==null){
           dispatch(setSubject(json[0]?.subjects))
           setSelectedTuto(json[0])
@@ -47,8 +44,7 @@ function TutorialsView() {
         else{
           dispatch(setSubject(json.filter(x=>x.id==selectedTuto.id)[0].subjects))
         }
-      })
-      .catch((err) => console.log(err));
+          })
 
   }, [popAddActive,refresh]);
 
@@ -56,59 +52,35 @@ function TutorialsView() {
   function GetSubjects(x){
     setSelectedTuto(x)
     setSelectedTutoName(x?.row?.name)
-    fetch(`https://localhost:7156/tutorial/getbyid/${x.id}`, {
-      method: "Get",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        dispatch(setSubject(json.subjects))
-      })
-      .catch((err) => console.log(err));
-    
+    Fetch(`https://localhost:7156/tutorial/getbyid/${x.id}`,"Get")
+        .then(x=>{
+          dispatch(setSubject(x?.subjects))
+        })
+ 
   }
 
   
   function DeleteTutorial(id){
     console.log(id)
-    fetch(`https://localhost:7156/tutorial/DeleteTutorial/${id}`, {
-      method: "Delete",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        dispatch(setRender(Math.random()))
-      })
-      .catch((err) => console.log(err));
-    
+    Fetch(`https://localhost:7156/tutorial/DeleteTutorial/${id}`,"Delete",null,dispatch)
+          .then(json=>{
+            if(json?.status==401){
+              navigate("/sign-in",{state:{from:location,replace:true}})
+            }
+            dispatch(setRender(Math.random()))
+          })
+ 
   }
   function DeleteSubject(id){
     console.log(id)
-    fetch(`https://localhost:7156/subject/deleteSubject/${id}`, {
-      method: "Delete",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-        dispatch(setRender(Math.random()))
-      })
-      .catch((err) => console.log(err));
+    Fetch(`https://localhost:7156/subject/deleteSubject/${id}`,"Delete",null,dispatch)
+          .then(json=>{
+            if(json?.status==401){
+              navigate("/sign-in",{state:{from:location,replace:true}})
+            }
+            dispatch(setRender(Math.random()))
+          })
+
     
   }
 
@@ -130,6 +102,7 @@ function TutorialsView() {
       <Add  />
       <Edit data={tutorial}/>
       <AddSection selectedTuto={selectedTuto}/>
+      <EditSection selectedSub={selectedSub}/>
 
 
       <DataGrid
@@ -213,8 +186,8 @@ function TutorialsView() {
               >
                 <Button
                   onClick={() => {
-                    setTutorial(x.row)
-                    dispatch(setPopEditTuto(true))
+                    setSelectedSub(x.row)
+                    dispatch(setPopEditSection(true))
                   }}
                   padding={"0.5rem"}
                   minWidth={false}

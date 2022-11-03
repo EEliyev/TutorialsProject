@@ -7,7 +7,8 @@ export const popupReducer= createSlice({
     initialState:{
         popAddTuto:false,
         popEditTuto:false,
-        popAddSection:false
+        popAddSection:false,
+        popEditSection:false
     },
     reducers:{
         setPopAddTuto:(state,action)=>{
@@ -18,10 +19,13 @@ export const popupReducer= createSlice({
         },
         setPopAddSection:(state,action)=>{
             state.popAddSection=action.payload
+        },
+        setPopEditSection:(state,action)=>{
+            state.popEditSection=action.payload
         }
         
     }
 })
 
-export const {setPopAddTuto,setPopEditTuto,setPopAddSection} = popupReducer.actions;
+export const {setPopAddTuto,setPopEditTuto,setPopAddSection,setPopEditSection} = popupReducer.actions;
 export default popupReducer.reducer;

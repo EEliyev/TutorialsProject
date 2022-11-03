@@ -61,6 +61,6 @@
   border: 0.5px solid rgba(55, 86, 223, 0.452);
 }
 .ck-content{
-  height: 150px;
+  height: 250px;
   overflow-y: scroll;
 }

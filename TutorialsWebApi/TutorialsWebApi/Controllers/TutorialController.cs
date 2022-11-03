@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TutorialsWebApi.Domain.Entity;
 using TutorialsWebApi.Services;
 using TutorialsWebApi.Specifications;
@@ -43,6 +45,7 @@ namespace TutorialsWebApi.Controllers
             }
             return Ok(data);
         }
+        [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("CreateTutorial")]
         public async Task<IActionResult> CreateTutorial(Tutorial model)
@@ -61,6 +64,7 @@ namespace TutorialsWebApi.Controllers
             await tutorialRepo.SaveAsync();
             return Ok(new { message=$"{model.Name} is created succesfully"});
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut]
         [Route("EditTutorial/{id}")]
         public async Task<IActionResult> EditTutorial(Guid id, Tutorial model)
@@ -81,6 +85,7 @@ namespace TutorialsWebApi.Controllers
             return Ok(new {message="Data updated succesfully"});
 
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete]
         [Route("DeleteTutorial/{id}")]
         public async Task<IActionResult> DeleteTutorial(Guid id)

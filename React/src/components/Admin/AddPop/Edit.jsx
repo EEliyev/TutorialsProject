@@ -5,10 +5,14 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { setPopAddTuto, setPopEditTuto } from "../../../Redux/popupReducer";
 import { setRender } from "../../../Redux/renderReducer";
+import Fetch from "../../Fetch";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Edit({ data }) { 
   const active= useSelector(state=>state.pop.popEditTuto);
   const dispatch=useDispatch();
+  const location=useLocation();
+  const navigate=useNavigate();
 
   const refName= useRef(null);
   const refTitle= useRef(null); 
@@ -25,25 +29,16 @@ function Edit({ data }) {
       url:refUrl.current.value!=""?refUrl.current?.value:null
     }
 
-      fetch(`https://localhost:7156/tutorial/EditTutorial/${data.id}`, {
-        method: "Put",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "http://localhost:3000",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body:JSON.stringify(model)
-      })
-        .then((res) =>res.json())
-        .then((json) => {
-          console.log(json);
-          dispatch(setPopEditTuto(false))
-          dispatch(setRender(Math.random()))
-        })
-        .catch((err) => console.log(err));
-
-
+    Fetch(`https://localhost:7156/tutorial/EditTutorial/${data.id}`,"Put",model)
+          .then(json=>{
+            console.log(json);
+            if(json?.status==401){
+              navigate("/sign-in",{state:{from:location,replace:true}})
+            }
+            dispatch(setPopEditTuto(false))
+            dispatch(setRender(Math.random()))
+          })
+   
   }
 
 
@@ -105,4 +100,4 @@ function Edit({ data }) {
   );
 }
 
-export default Edit;
+export default React.memo(Edit);

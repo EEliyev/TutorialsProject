@@ -23,7 +23,7 @@ namespace TutorialsWebApi.Repository
             context.Set<T>().Remove(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>(ISpecification<T> spec) where T : class
+        public async Task<IEnumerable<T>> GetAll<T>(ISpecification<T> spec) where T : BaseEntity
         {
             var query =  context.Set<T>().AsQueryable();
             if(spec!=null)
@@ -36,7 +36,7 @@ namespace TutorialsWebApi.Repository
                 }
             }
            
-            return await query.ToListAsync();
+            return await query.OrderBy(x=>x.CreateAt).ToListAsync();
         }
 
         public async Task<T> GetById<T>(Guid Id, ISpecification<T> spec=null) where T: BaseEntity
@@ -54,7 +54,7 @@ namespace TutorialsWebApi.Repository
             }
           
                 
-            return await query.FirstOrDefaultAsync(x=>x.Id==Id);
+            return await query.OrderBy(x=>x.CreateAt).FirstOrDefaultAsync(x=>x.Id==Id);
         }
 
         public async Task SaveAsync()

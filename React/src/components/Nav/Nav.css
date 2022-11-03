@@ -48,6 +48,31 @@
     width: 300px;
     margin-right: 2rem;
 }
+.nav-logout{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 300px;
+    margin-right: 2rem;
+}
+.nav-logout .nav-item {
+    background-color: #C8D94D;
+    display: flex;
+    align-items: center;
+    padding: 1.4rem;
+    color: #fff;
+    height: 2.5rem;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.25s;
+    white-space: nowrap;
+}
+
+.nav-logout .nav-item:hover {
+    background-color: #d8f118;
+    color: #34568B;
+}
 
 #sign {
     display: flex;

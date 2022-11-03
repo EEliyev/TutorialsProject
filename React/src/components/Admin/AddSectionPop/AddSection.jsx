@@ -7,11 +7,18 @@ import { setPopAddSection, setPopAddTuto } from "../../../Redux/popupReducer";
 import { addData } from "../../../Redux/dataReduce";
 import { setRender } from "../../../Redux/renderReducer";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Fetch from "../../Fetch";
+import { useLocation, useNavigate } from "react-router-dom";
+
+
+
 
 function AddSection({ selectedTuto }) {
   const active = useSelector((state) => state.pop.popAddSection);
   const dispatch = useDispatch();
+  const location=useLocation();
+  const navigate=useNavigate(); 
 
   const [errSpan, setErrSpan] = useState(null);
 
@@ -20,7 +27,6 @@ function AddSection({ selectedTuto }) {
   const refName = useRef(null);
   const refTitle = useRef(null);
 
-  console.log(errSpan);
   function Submit(e) {
     e.preventDefault();
 
@@ -30,30 +36,26 @@ function AddSection({ selectedTuto }) {
       title: refTitle.current?.value != "" ? refTitle.current?.value : null,
       body: editor != "" ? editor : null,
     };
-    console.log(model);
+   
 
-    fetch("https://localhost:7156/subject/createSubject", {
-      method: "Post",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(model),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json?.errors != null) {
-          setErrSpan(json?.errors);
-          setEditor(null);
-        }
-        console.log(json);
-        // dispatch(setPopAddSection(false))
-        dispatch(setRender(Math.random()));
-        setEditor(null);
-      })
-      .catch((err) => console.log(err));
+    Fetch("https://localhost:7156/subject/createSubject","Post",model)
+          .then(json=>{
+            if(json?.status==401){
+              dispatch(setPopAddSection(false))
+              navigate("/sign-in",{state:{from:location,replace:true}})
+            }else{
+              if (json?.errors != null) {
+                setErrSpan(json?.errors);
+                setEditor(null);
+              }
+              console.log(json);
+              // dispatch(setPopAddSection(false))
+              dispatch(setRender(Math.random()));
+              setEditor(null);
+            }
+           
+          })
+   
   }
   function onChangeEditor(e, editor) {
     setEditor(editor.getData());

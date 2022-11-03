@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { setToken, setUser } from "../../../Redux/authReducer";
 import Button from "../../Elements/Button/Button";
+import Fetch from "../../Fetch";
 import "./SignIn.css";
 
 function SignIn() {
@@ -11,8 +14,31 @@ function SignIn() {
   const [spanEmail, setSpanEmail] = useState(null);
   const [spanPass, setSpanPass] = useState(null);
 
+  const location=useLocation();
+  const from=location.state?.from?.pathname || "/";
+
+  const dispatch=useDispatch()
+
+  const navigate=useNavigate();
+
+
+  function Submit(e){
+    e.preventDefault()
+    Fetch("https://localhost:7156/api/identity/login","Post",data,dispatch).then(x=>{
+      if(x.success){
+        if(x?.token!=null){
+          localStorage.setItem("Authorization",x.token)
+        }
+        navigate(from,{replace:true})
+      }else{
+        setSpanPass(x.errors[0])
+      }
+    });
+   
+  }
+
   function isValidEmail(item) {
-    return /^[a-zA-Z0-9]+@+[a-zA-Z0-9]+.+[A-z]/.test(item);
+    return /^[a-zA-Z0-9.!]+@+[a-zA-Z0-9]+.+[A-z]/.test(item);
   }
 
   function isValidPassword(item) {
@@ -20,10 +46,10 @@ function SignIn() {
       item
     );
   }
-  console.log(data);
+
   function HandleChange(e) {
-    if (e.target.id == "Email") {
-      if (!isValidEmail(e.target.value) && e.target.value != "") {
+    if (e.target.id === "Email") {
+      if (!isValidEmail(e.target.value) && e.target.value !== "") {
         setSpanEmail("Not valid email.");
         setData((x) => ({ ...x, email: "" }));
       } else {
@@ -31,8 +57,8 @@ function SignIn() {
         setSpanEmail(null);
       }
     }
-    if (e.target.id == "Password") {
-      if (!isValidPassword(e.target.value) && e.target.value != "") {
+    if (e.target.id === "Password") {
+      if (!isValidPassword(e.target.value) && e.target.value !== "") {
         setSpanPass(
           "Password must cointain at least one number, one upper letter and one character"
         );
@@ -46,6 +72,7 @@ function SignIn() {
   return (
     <div className="sign-container">
       <div className="sign-inner">
+        <form action="">
         <div className="colorful-title">Sign In</div>
         <div className="sign-inputs">
           <input
@@ -74,11 +101,12 @@ function SignIn() {
         </div>
         <div className="sign-inputs-footer">
           <Link to={"/sign-up"}>Create account</Link>
-          <Button width={"100px"} text={"Log in"} />
+          <Button type="submit" onClick={(e)=>Submit(e)} width={"100px"} text={"Log in"} />
         </div>
+        </form>
       </div>
     </div>
   );
 }
 
-export default SignIn;
+export default React.memo(SignIn);

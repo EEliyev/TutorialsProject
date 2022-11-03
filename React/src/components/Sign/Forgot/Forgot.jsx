@@ -48,4 +48,4 @@ function Forgot() {
   );
 }
 
-export default Forgot;
+export default React.memo(Forgot);
