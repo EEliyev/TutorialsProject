@@ -6,13 +6,13 @@
     margin: 0 auto;
     justify-content: center;
     flex-wrap: wrap;
-    /* background: linear-gradient(
+    background: linear-gradient(
       220deg,
-      #c8d94d 30%,
-      transparent 30%,
-      transparent 70%,
-      #3e454d 70%
-    ); */
+      #c8d94d 50%,
+      transparent 50%,
+      transparent 50%,
+      #3e454d 50%
+    );
     animation: 1s bottom-main-animation;
   }
   @keyframes bottom-main-animation {

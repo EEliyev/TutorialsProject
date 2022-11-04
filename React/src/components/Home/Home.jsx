@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, Route } from 'react-router-dom'
 import Banner from '../Banner/Banner'
 import Button from '../Elements/Button/Button'
@@ -6,20 +6,21 @@ import './Home.css'
 
 function Home({cards}) {
 
-  const[scroll,setScroll]=useState(0);
 
-
+  const refBottommain=useRef();
 
   useEffect(() => {
-  
-    const updatePosition = () => {
 
-        var d=((window.pageYOffset)/(document.body.clientHeight-window.innerHeight)).toFixed(2)*100;
-  
-        setScroll(d/5)
+ 
+    const updatePosition = (e) => {
+        var d=((window.pageYOffset)/(document.body.clientHeight-window.innerHeight)).toFixed(2)*20;
+      if(refBottommain.current!=null){
+        refBottommain.current.style.cssText=`background:linear-gradient(220deg,#c8d94d ${50-d}%,transparent ${50-d}%,transparent ${50+d}%,#3e454d ${50+d}%)`
+
+      }
 
     }
-    window.addEventListener("scroll", updatePosition);
+    window.addEventListener("scroll", (e)=>updatePosition(e));
     // updatePosition();
     return () => window.removeEventListener("scroll", updatePosition);
   })
@@ -31,7 +32,7 @@ function Home({cards}) {
       <div className="home-main">
         <h1 style={{ display: 'block', textAlign: "center", margin: "3rem" }}>Services</h1>
 
-        <div className="bottom-main-secondary" style={{background:`linear-gradient(220deg,#c8d94d ${50-scroll}%,transparent ${50-scroll}%,transparent ${50+scroll}%,#3e454d ${50+scroll}%)`}}>
+        <div ref={refBottommain} className="bottom-main-secondary">
          {cards?.map((x,i)=>{
            return <Link to={`/tutorials/${x.url}`} key={i}>
            <div className="card" >
